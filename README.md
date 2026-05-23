@@ -19,12 +19,36 @@ Third-person action RPG prototype made in Unity 6.
 - Character Controller
 - Animator State Machine
 
-## Planned Features
+## Latest Update
+
+### Combat Update
+- Added sword weapon attachment
+- Added attack animation system
+- Added attack state to player state machine
+- Added attack cooldown system
+- Added movement locking during attacks
+- Integrated Mixamo combat animations
+- Improved animator transition setup
+
+### Movement Improvements
+- Switched from Rigidbody movement to CharacterController
+- Added sprint system
+- Added accelerated falling gravity
+- Improved slope/ramp handling
+- Added grounded checks
+
+### Architecture
+- Refactored player logic into:
+  - PlayerMovement
+  - PlayerCombat
+  - PlayerStateMachine
+- Added scalable state-action dictionary system
+
+### Next Goals
 - Enemy AI
-- Combo attacks
-- Lock-on system
-- Health system
 - Damage system
+- Sword hitbox
+- Health system
 - Bow combat
 
 ## Screenshots
