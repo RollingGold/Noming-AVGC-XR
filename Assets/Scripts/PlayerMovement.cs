@@ -26,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
 
     private InputSystem_Actions inputActions;
 
+    private Player player;
+
     private PlayerStateMachine stateMachine;
 
     private PlayerCombat playerCombat;
@@ -50,6 +52,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        player = GetComponent<Player>();
+
         controller = GetComponent<CharacterController>();
 
         stateMachine = GetComponent<PlayerStateMachine>();
@@ -100,6 +104,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (player.IsDead)
+            return;
+
         CheckCanMove();
 
         CheckGround();

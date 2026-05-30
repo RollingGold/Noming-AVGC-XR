@@ -10,9 +10,13 @@ public class PlayerCombat : MonoBehaviour
 
     private InputSystem_Actions inputActions;
 
+    private Player player;
+
     private Animator animator;
 
     private PlayerMovement playerMovement;
+
+    private GameObject weaponCollider;
 
     private bool attackPressed;
 
@@ -22,12 +26,15 @@ public class PlayerCombat : MonoBehaviour
 
     private void Awake()
     {
+        player = GetComponent<Player>();
 
         attackCooldownLeft = attackCooldown;
 
         playerMovement = GetComponent<PlayerMovement>();
 
         animator = GetComponent<Animator>();
+
+        weaponCollider = GameObject.FindGameObjectWithTag("Weapon Collider");
 
         inputActions = new InputSystem_Actions();
     }
@@ -50,8 +57,8 @@ public class PlayerCombat : MonoBehaviour
 
     private void Update()
     {
-        
-        EndAttack();
+        if (player.IsDead)
+            return;
 
         HandleAttack();
 
@@ -74,7 +81,7 @@ public class PlayerCombat : MonoBehaviour
 
         attackPressed = false;
 
-        
+        isAttacking = true;
 
         attackCooldownLeft = 0f;
 
@@ -82,19 +89,24 @@ public class PlayerCombat : MonoBehaviour
 
         animator.SetTrigger("Attack");
     }
+    
+
+
+    //Animation Events
 
     public void EndAttack()
     {
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        if (stateInfo.IsTag("Attack"))
-        {
-            isAttacking = true;
-        }
-        else
-        {
-            isAttacking = false;
-        }
+        isAttacking = false;
     }
 
+    public void EnableWeaponCollider()
+    {
+
+        weaponCollider.SetActive(true);
+    }
+
+    public void DisableWeaponCollider()
+    {
+        weaponCollider.SetActive(false);
+    }
 }
