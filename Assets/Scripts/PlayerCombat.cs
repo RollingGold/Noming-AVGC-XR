@@ -5,7 +5,7 @@ using UnityEngine.InputSystem.Controls;
 public class PlayerCombat : MonoBehaviour
 {
     [Header("Attack Parameter")]
-    [SerializeField] private float attackCooldown = 3;
+    [SerializeField] private float attackCooldown = 3f;
 
 
     private InputSystem_Actions inputActions;
@@ -20,7 +20,8 @@ public class PlayerCombat : MonoBehaviour
 
     private bool attackPressed;
 
-    private float attackCooldownLeft;
+    public float AttackCooldown => attackCooldown;
+    public float attackCooldownLeft { get; private set; }
 
     public bool isAttacking {  get; private set; }
 
@@ -28,7 +29,7 @@ public class PlayerCombat : MonoBehaviour
     {
         player = GetComponent<Player>();
 
-        attackCooldownLeft = attackCooldown;
+        attackCooldownLeft = 0f;
 
         playerMovement = GetComponent<PlayerMovement>();
 
@@ -66,12 +67,15 @@ public class PlayerCombat : MonoBehaviour
 
     private void HandleAttack()
     {
+
+        attackCooldownLeft -= Time.deltaTime;
+
         if (!attackPressed)
             return;
 
-        attackCooldownLeft += Time.deltaTime;
 
-        if (attackCooldownLeft < attackCooldown) return;
+        if (attackCooldownLeft >= 0) 
+            return;
 
         if (isAttacking)
             return;
@@ -83,7 +87,6 @@ public class PlayerCombat : MonoBehaviour
 
         isAttacking = true;
 
-        attackCooldownLeft = 0f;
 
 
 
@@ -97,6 +100,8 @@ public class PlayerCombat : MonoBehaviour
     public void EndAttack()
     {
         isAttacking = false;
+
+        attackCooldownLeft = attackCooldown;
     }
 
     public void EnableWeaponCollider()
@@ -108,5 +113,6 @@ public class PlayerCombat : MonoBehaviour
     public void DisableWeaponCollider()
     {
         weaponCollider.SetActive(false);
+
     }
 }

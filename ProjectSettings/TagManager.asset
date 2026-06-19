@@ -36,7 +36,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Map Icon
   - Tarrain
   - Player
   m_SortingLayers:
@@ -51,4 +51,4 @@ TagManager:
   - Light Layer 4
   - Light Layer 5
   - Light Layer 6
-  - Light Layer 7
+  - LightsForCharacterCameraForInventory

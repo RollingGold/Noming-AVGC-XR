@@ -8,8 +8,9 @@ public class Player : MonoBehaviour
     [Header("Combat")]
     [SerializeField] private int attackDamage = 25;
 
-    private int currentHealth;
+    public int currentHealth { get; private set; }
 
+    public int MaxHealth => maxHealth;
     public bool IsDead { get; private set; }
 
     public float HealthPercent =>
