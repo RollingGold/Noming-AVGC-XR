@@ -1,21 +1,27 @@
 using UnityEngine;
 
-public class ItemPickup : MonoBehaviour
+public class ItemPickup : MonoBehaviour, IInteractable
 {
     [SerializeField]
     private ItemData item;
 
-    private void OnTriggerEnter(
-        Collider other)
+    private Inventory inventory;
+
+    public string InteractionText => "Pick Up";
+
+    private void Awake()
     {
-        if (!other.CompareTag("Player"))
-            return;
+        inventory = GameObject
+            .FindGameObjectWithTag("Player")
+            .GetComponent<Inventory>();
+    }
 
-        Inventory inventory =
-            other.GetComponent<Inventory>();
-
+    public void Interact()
+    {
         inventory.AddItem(item);
 
         Destroy(gameObject);
     }
+
+
 }

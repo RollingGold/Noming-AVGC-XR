@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour
 
     public float AttackDamage => attackDamage;
 
+    public EnemySpawner Spawner => spawner;
+
     private int currentPhase;
 
     private int currentHealth;
@@ -22,6 +24,8 @@ public class Enemy : MonoBehaviour
     private Animator animator;
 
     private EnemyAI enemyAI;
+
+    private EnemySpawner spawner;
 
     public bool IsDead { get; private set; }
 
@@ -123,15 +127,35 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void SetSpawner(EnemySpawner enemySpawner)
+    {
+        spawner = enemySpawner;
+    }
+
     private void Die()
     {
         IsDead = true;
 
         animator.SetTrigger("Die");
 
+        
+
         Debug.Log("Boss defeated");
 
+        if (spawner != null)
+        {
+            spawner.EnemyDied();
+        }
+
         Destroy(gameObject, despawnDelay);
+    }
+
+    public void Kill()
+    {
+        if (IsDead)
+            return;
+
+        Die();
     }
 
     public int GetCurrentHealth()

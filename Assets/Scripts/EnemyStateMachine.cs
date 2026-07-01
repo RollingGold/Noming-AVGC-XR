@@ -9,11 +9,34 @@ public class EnemyStateMachine : MonoBehaviour
     public enum EnemyState
     {
         Idle,
-        Sprinting,
+        Moving
     }
 
     private Dictionary<EnemyState, Action> stateActions;
-    public EnemyState CurrentState { get; private set; }
+
+    public EnemyState CurrentState{get; private set;}
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+
+        stateActions =
+            new Dictionary<EnemyState, Action>
+            {
+                { EnemyState.Idle, HandleIdle },
+                { EnemyState.Moving, HandleMoving }
+            };
+    }
+
+    private void Start()
+    {
+        ChangeState(EnemyState.Idle);
+    }
+
+    private void Update()
+    {
+        stateActions[CurrentState].Invoke();
+    }
 
     public void ChangeState(EnemyState newState)
     {
@@ -22,46 +45,18 @@ public class EnemyStateMachine : MonoBehaviour
 
         CurrentState = newState;
 
-        Debug.Log(CurrentState);
+        //Debug.Log(CurrentState);
     }
 
-    private void Awake()
+    private void AnimationStateSetter(
+        EnemyState currentState)
     {
-
-
-        animator = GetComponent<Animator>();
-
-        stateActions = new Dictionary<EnemyState, Action>
+        foreach ( EnemyState state in Enum.GetValues(typeof(EnemyState)))
         {
-            {EnemyState.Idle, HandleIdle },
-            {EnemyState.Sprinting, HandleSprint }
-
-
-        };
-    }
-    private void Start()
-    {
-        ChangeState(EnemyState.Idle);
-    }
-
-    private void Update()
-    {
-
-        stateActions[CurrentState].Invoke();
-    }
-
-    private void AnimationStateSetter(EnemyState currentState)
-    {
-        foreach (EnemyState state in Enum.GetValues(typeof(EnemyState)))
-        {
-            if (state == currentState)
-            {
-                animator.SetBool(state.ToString(), true);
-            }
-            else
-            {
-                animator.SetBool(state.ToString(), false);
-            }
+            animator.SetBool(
+                state.ToString(),
+                state == currentState
+            );
         }
     }
 
@@ -70,14 +65,8 @@ public class EnemyStateMachine : MonoBehaviour
         AnimationStateSetter(EnemyState.Idle);
     }
 
-    private void HandleSprint()
+    private void HandleMoving()
     {
-        AnimationStateSetter(EnemyState.Sprinting);
+        AnimationStateSetter(EnemyState.Moving);
     }
-
- 
-
-  
 }
-
-

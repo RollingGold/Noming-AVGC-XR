@@ -37,9 +37,9 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "852140f2-7766-474d-8707-702459ba45f3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -127,6 +127,24 @@
                     "name": "Escape",
                     "type": "Button",
                     "id": "b16df19e-28c2-4eab-b45a-f770ef959c8a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "KillAll",
+                    "type": "Button",
+                    "id": "b5f563be-ec55-4dc6-a60a-ec59c83775d2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "KillOne",
+                    "type": "Button",
+                    "id": "0782d7a1-445a-44db-b1dc-757db910fc85",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -571,6 +589,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2e56c888-10bc-442c-89a1-4774ae25c1a4",
+                    "path": "<Keyboard>/0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "KillAll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a44f79ff-164d-4e17-9e33-6de598543a46",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "KillOne",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
