@@ -1,145 +1,94 @@
-Noming-AVGC-XR
+# Noming-AVGC-XR
 
 Third-person Action RPG prototype built in Unity 6.
 
-Overview
+## Overview
 
 Noming-AVGC-XR is an action RPG prototype focused on responsive third-person combat, enemy AI, boss encounters, procedural room-based level generation, interaction, inventory/equipment, quests, saving/loading, and modular gameplay systems.
 
-The project has now reached an Initial Version milestone. The core gameplay and supporting systems are implemented and are being expanded and refined.
+The project has now reached an **Initial Version** milestone. The core gameplay and supporting systems are implemented and are being expanded and refined.
 
-Current Development Status
+---
 
-Initial Version — Done
+# Current Development Status
+
+## Initial Version — Done
 
 The first major version of the project is complete as a working prototype.
 
 Current systems include:
 
-Third-person player movement
+- Third-person player movement
+- Camera-relative movement
+- Sprinting
+- Jumping
+- Falling/gravity
+- Player state machine
+- Melee combat
+- Animation-driven weapon hit detection
+- Enemy AI
+- Enemy combat
+- Enemy state machine
+- Enemy spawning
+- Boss/multi-phase enemy architecture
+- NavMesh navigation
+- Runtime NavMesh generation/baking
+- Room-based level generation
+- Manual room placement
+- Automatic room generation
+- Room connectors
+- Room collision/overlap handling
+- Room databases
+- Required-room generation
+- Corridor generation
+- Dead-end generation
+- Auto-build rebuild attempts
+- Room selection/preview UI
+- Room thumbnails
+- Level map saving
+- Player interaction system
+- Interaction prompts
+- Inventory
+- Item database
+- Item pickups
+- Equipment system
+- Quest system
+- Quest data
+- Quest objectives
+- Quest giver
+- Quest UI
+- Save/load system
+- Main menu and scene loading
+- Minimap support
+- Player/enemy minimap indicators
+- Skill UI
+- Input System integration
 
-Camera-relative movement
+---
 
-Sprinting
+# Core Gameplay
 
-Jumping
-
-Falling/gravity
-
-Player state machine
-
-Melee combat
-
-Animation-driven weapon hit detection
-
-Enemy AI
-
-Enemy combat
-
-Enemy state machine
-
-Enemy spawning
-
-Boss/multi-phase enemy architecture
-
-NavMesh navigation
-
-Runtime NavMesh generation/baking
-
-Room-based level generation
-
-Manual room placement
-
-Automatic room generation
-
-Room connectors
-
-Room collision/overlap handling
-
-Room databases
-
-Required-room generation
-
-Corridor generation
-
-Dead-end generation
-
-Auto-build rebuild attempts
-
-Room selection/preview UI
-
-Room thumbnails
-
-Level map saving
-
-Player interaction system
-
-Interaction prompts
-
-Inventory
-
-Item database
-
-Item pickups
-
-Equipment system
-
-Quest system
-
-Quest data
-
-Quest objectives
-
-Quest giver
-
-Quest UI
-
-Save/load system
-
-Main menu and scene loading
-
-Minimap support
-
-Player/enemy minimap indicators
-
-Skill UI
-
-Input System integration
-
-Core Gameplay
-
-Player
+## Player
 
 The player system includes:
 
-CharacterController-based locomotion
-
-Camera-relative movement
-
-Walking
-
-Sprinting
-
-Jumping
-
-Falling
-
-Gravity
-
-Ground detection
-
-Player state machine
-
-Attack state
-
-Movement locking during attacks
-
-Player health
-
-Player UI
+- CharacterController-based locomotion
+- Camera-relative movement
+- Walking
+- Sprinting
+- Jumping
+- Falling
+- Gravity
+- Ground detection
+- Player state machine
+- Attack state
+- Movement locking during attacks
+- Player health
+- Player UI
 
 Main scripts:
 
+```text
 Player.cs
 PlayerMovement.cs
 PlayerCombat.cs
@@ -147,11 +96,15 @@ PlayerStateMachine.cs
 PlayerInteraction.cs
 PlayerUI.cs
 PlayerArrowUI.cs
+```
 
-Combat
+---
+
+# Combat
 
 The combat system is animation-driven.
 
+```text
 Input
   ↓
 PlayerCombat
@@ -165,98 +118,87 @@ Weapon Collider
 Weapon
   ↓
 Enemy
+```
 
 Features:
 
-Melee attacks
-
-Attack cooldown
-
-Attack state
-
-Weapon hit detection
-
-Animation-driven collider activation
-
-Damage handling
-
-Enemy death
-
-Collision-based attacks
+- Melee attacks
+- Attack cooldown
+- Attack state
+- Weapon hit detection
+- Animation-driven collider activation
+- Damage handling
+- Enemy death
+- Collision-based attacks
 
 Main scripts:
 
+```text
 PlayerCombat.cs
 Weapon.cs
 NormalAttackCollider.cs
 PlayerCollusionDetector.cs
 WeaponColliderBehaviourInAnimation.cs
+```
 
-Enemy AI
+---
+
+# Enemy AI
 
 Enemies use NavMesh-based movement and state-driven behavior.
 
 Features:
 
-Enemy health
-
-Enemy death
-
-Enemy AI
-
-Player detection
-
-Chase behavior
-
-Attack range
-
-Melee attacks
-
-Attack cooldown
-
-Enemy state machine
-
-Enemy spawning
-
-Enemy minimap indicators
+- Enemy health
+- Enemy death
+- Enemy AI
+- Player detection
+- Chase behavior
+- Attack range
+- Melee attacks
+- Attack cooldown
+- Enemy state machine
+- Enemy spawning
+- Enemy minimap indicators
 
 Main scripts:
 
+```text
 Enemy.cs
 EnemyAI.cs
 EnemyCombat.cs
 EnemyStateMachine.cs
 EnemySpawner.cs
 EnemyMiniMapDot.cs
+```
 
-Boss / Multi-Phase Combat
+---
+
+# Boss / Multi-Phase Combat
 
 Enemy health supports phase-based encounters.
 
 Features include:
 
-Multiple health phases
-
-Configurable phase health
-
-Optional damage carry-over
-
-Phase transitions
-
-Normal attacks
-
-Meteor attack
-
-Death handling
+- Multiple health phases
+- Configurable phase health
+- Optional damage carry-over
+- Phase transitions
+- Normal attacks
+- Meteor attack
+- Death handling
 
 The existing enemy/combat architecture can be extended for additional boss attacks and phase abilities.
 
-Procedural Room System
+---
+
+# Procedural Room System
 
 The project contains a room-based level-generation system.
 
 Core architecture:
 
+```text
 RoomDatabase
       ↓
 Room Prefab
@@ -268,13 +210,15 @@ RoomBuilder
 LevelEditorSelection
       ↓
 Generated Map
+```
 
-Room
+## Room
 
-Room.cs contains the room's metadata and connectors.
+`Room.cs` contains the room's metadata and connectors.
 
 Room types include:
 
+```text
 Start
 Normal
 DeadEnd
@@ -284,26 +228,34 @@ Shop
 Event
 Stair
 Secret
+```
 
 Room sizes include:
 
+```text
 Small
 Medium
 Large
 Corridor
+```
 
-Room Database
+---
 
-RoomDatabase.cs stores the available room prefabs.
+## Room Database
+
+`RoomDatabase.cs` stores the available room prefabs.
 
 This allows the level-generation system to select rooms without hard-coding individual prefabs into the generator.
 
-Room Builder
+---
 
-RoomBuilder.cs handles connecting a new room to an existing connector.
+## Room Builder
+
+`RoomBuilder.cs` handles connecting a new room to an existing connector.
 
 The basic process is:
 
+```text
 Select connector
       ↓
 Select room prefab
@@ -319,54 +271,55 @@ Snap room position
 Mark connectors occupied
       ↓
 Store build history
+```
 
-Automatic Room Generation
+---
+
+## Automatic Room Generation
 
 The Level Editor supports automatic generation.
 
 Auto Build supports:
 
-Maximum room count
-
-Minimum room count
-
-Dead ends
-
-Corridors
-
-Corridor chain counting
-
-Required rooms
-
-Rebuild attempts
-
-Collision/overlap checking
-
-Auto-generated room tracking
-
-Cleanup of previously auto-generated rooms
+- Maximum room count
+- Minimum room count
+- Dead ends
+- Corridors
+- Corridor chain counting
+- Required rooms
+- Rebuild attempts
+- Collision/overlap checking
+- Auto-generated room tracking
+- Cleanup of previously auto-generated rooms
 
 The generator can rebuild the generated section when required rooms are missing.
 
-Starting Room
+---
+
+## Starting Room
 
 The generator uses the first room/starting room as the beginning of an Auto Build chain.
 
 Auto-generated rooms are tracked so the generated map can be cleared and rebuilt without deleting unrelated/manual content.
 
-Room Connectors
+---
+
+## Room Connectors
 
 Connectors define where rooms can be attached.
 
 A connector tracks:
 
+```text
 Direction
 Anchor Point
 Occupied state
 Connected Room
+```
 
-The runtime + selection indicator shows available connectors.
+The runtime `+` selection indicator shows available connectors.
 
+```text
 Free connector
     ↓
     +
@@ -374,48 +327,51 @@ Free connector
 Occupied connector
     ↓
     X / disabled
+```
 
-Room Selection and Editor Tools
+---
+
+# Room Selection and Editor Tools
 
 The project contains custom editor tooling for the room-generation workflow.
 
 Main scripts:
 
+```text
 LevelEditorManager.cs
 LevelEditorSelection.cs
 LevelEditorSelectionEditor.cs
 RoomButtonUI.cs
 RoomSelectedUI.cs
 RoomOutline.cs
+```
 
 These systems handle:
 
-Room selection
+- Room selection
+- Room preview
+- Connector selection
+- Manual room building
+- Auto Build
+- Required room selection
+- Room indicators
+- Editor camera controls
 
-Room preview
+---
 
-Connector selection
-
-Manual room building
-
-Auto Build
-
-Required room selection
-
-Room indicators
-
-Editor camera controls
-
-Room Thumbnails
+# Room Thumbnails
 
 Room thumbnails are generated using:
 
+```text
 RoomThumbnailGenerator.cs
+```
 
 The thumbnail system creates temporary preview instances and renders them using a dedicated preview camera/layer.
 
 General workflow:
 
+```text
 Room prefab
     ↓
 Temporary preview instance
@@ -433,29 +389,39 @@ RenderTexture
 PNG
     ↓
 Room thumbnail
+```
 
 This keeps thumbnails separate from the actual runtime room instances.
 
-Level Map Saving
+---
+
+# Level Map Saving
 
 The project contains:
 
+```text
 LevelMapSaver.cs
+```
 
 The room-generation system stores enough information about generated rooms to support map saving/loading workflows.
 
-Room build history is maintained by the Room component.
+Room build history is maintained by the `Room` component.
 
-Runtime NavMesh
+---
+
+# Runtime NavMesh
 
 The project includes runtime NavMesh generation.
 
 Main script:
 
+```text
 AutoGenerateAndBake.cs
+```
 
 The intended order is:
 
+```text
 Generate rooms
       ↓
 Finish generation
@@ -465,22 +431,28 @@ Sync transforms/physics
 Build NavMesh
       ↓
 Enable systems that depend on navigation
+```
 
-This is important because enemies using NavMeshAgent cannot correctly navigate newly generated geometry until the NavMesh has been built.
+This is important because enemies using `NavMeshAgent` cannot correctly navigate newly generated geometry until the NavMesh has been built.
 
-Interaction System
+---
+
+# Interaction System
 
 The project contains a modular interaction system.
 
 Main scripts:
 
+```text
 IInteractable.cs
 PlayerInteraction.cs
 InteractionPromptUI.cs
 InteractionUIManager.cs
+```
 
 The basic architecture is:
 
+```text
 Player
   ↓
 PlayerInteraction
@@ -492,38 +464,41 @@ InteractionPromptUI
 Player presses Interact
   ↓
 IInteractable.Interact()
+```
 
 This allows different objects to implement their own interaction behavior without putting all interaction logic into the Player script.
 
-Adding a New Interactable
+---
+
+# Adding a New Interactable
 
 The normal pattern is:
 
-Create a GameObject.
-
-Add the required collider.
-
-Add a script implementing IInteractable.
-
-Implement the interaction behavior.
-
-Configure the interaction prompt if required.
-
-Test it through the Player interaction system.
+1. Create a GameObject.
+2. Add the required collider.
+3. Add a script implementing `IInteractable`.
+4. Implement the interaction behavior.
+5. Configure the interaction prompt if required.
+6. Test it through the Player interaction system.
 
 Example architecture:
 
+```text
 Door
 ├── Mesh
 ├── Collider
 └── DoorInteractable
+```
 
 The door should own door behavior; the player interaction system should only detect and invoke it.
 
-Inventory System
+---
+
+# Inventory System
 
 The project contains:
 
+```text
 Inventory.cs
 InventorySlot.cs
 InventoryUI.cs
@@ -532,9 +507,11 @@ ItemDatabase.cs
 ItemPickup.cs
 ItemPopupUI.cs
 ItemVisual.cs
+```
 
 The architecture separates item data from runtime inventory state.
 
+```text
 ItemData
     ↓
 ItemDatabase
@@ -544,36 +521,39 @@ ItemPickup
 Inventory
     ↓
 InventoryUI
+```
 
-Adding a New Item
+---
+
+# Adding a New Item
 
 General workflow:
 
-Create an ItemData asset.
-
-Configure the item's properties.
-
-Add it to the ItemDatabase.
-
-Create/configure an item pickup if the item exists in the world.
-
-Configure its visual representation.
-
-Test pickup and inventory UI behavior.
+1. Create an `ItemData` asset.
+2. Configure the item's properties.
+3. Add it to the `ItemDatabase`.
+4. Create/configure an item pickup if the item exists in the world.
+5. Configure its visual representation.
+6. Test pickup and inventory UI behavior.
 
 This keeps item definitions data-driven instead of hard-coding every item into the inventory system.
 
-Equipment System
+---
+
+# Equipment System
 
 Equipment is handled by:
 
+```text
 EquipmentManager.cs
 EquipmentSlot.cs
+```
 
 The system separates inventory items from equipped items.
 
 General flow:
 
+```text
 Inventory
    ↓
 Select item
@@ -583,13 +563,17 @@ EquipmentManager
 EquipmentSlot
    ↓
 Equipped item
+```
 
 This allows the equipment system to be expanded with additional equipment slots and item categories.
 
-Quest System
+---
+
+# Quest System
 
 The project contains a complete quest-related structure:
 
+```text
 Quest.cs
 QuestData.cs
 QuestObjective.cs
@@ -600,11 +584,13 @@ QuestButtonUI.cs
 QuestDetailsUI.cs
 QuestMenuUI.cs
 QuestUI.cs
+```
 
 The architecture separates quest definitions from runtime quest state.
 
 General flow:
 
+```text
 QuestData
     ↓
 Quest
@@ -614,37 +600,41 @@ QuestManager
 Objectives
     ↓
 Quest UI
+```
 
 Quest givers provide the player with access to quests, while the Quest Manager handles active quest state.
 
-Adding a New Quest
+---
+
+# Adding a New Quest
 
 General workflow:
 
-Create/configure the quest data.
-
-Add objectives.
-
-Configure rewards/requirements as supported.
-
-Assign the quest to the appropriate Quest Giver.
-
-Configure the quest UI.
-
-Test accepting, progressing and completing the quest.
+1. Create/configure the quest data.
+2. Add objectives.
+3. Configure rewards/requirements as supported.
+4. Assign the quest to the appropriate Quest Giver.
+5. Configure the quest UI.
+6. Test accepting, progressing and completing the quest.
 
 The project also contains:
 
+```text
 Assets/Editor/QuestGenerator.cs
+```
 
 for editor-side quest creation/generation support.
 
-Save System
+---
+
+# Save System
 
 The project contains:
 
+```text
 SaveData.cs
 SaveManager.cs
+```
 
 The save system is responsible for serializing persistent game information.
 
@@ -652,34 +642,27 @@ The system can be expanded as new persistent gameplay systems are introduced.
 
 When adding a new persistent system, its state should be added to the save data rather than relying on scene objects to reconstruct arbitrary runtime state.
 
-UI Systems
+---
+
+# UI Systems
 
 The project contains UI systems for:
 
-Player HUD
-
-Inventory
-
-Items
-
-Equipment
-
-Quests
-
-Interaction prompts
-
-Room selection
-
-Skills
-
-Main menu
-
-Scene loading
-
-Minimap
+- Player HUD
+- Inventory
+- Items
+- Equipment
+- Quests
+- Interaction prompts
+- Room selection
+- Skills
+- Main menu
+- Scene loading
+- Minimap
 
 Important scripts include:
 
+```text
 PlayerUI.cs
 InventoryUI.cs
 ItemPopupUI.cs
@@ -693,49 +676,59 @@ SkillSlotUI.cs
 MainMenuUIManager.cs
 MenuManager.cs
 SceneLoader.cs
+```
 
-Minimap
+---
+
+# Minimap
 
 The project contains:
 
+```text
 MinimapCamera.cs
 PlayerArrowUI.cs
 EnemyMiniMapDot.cs
+```
 
 The minimap architecture separates the minimap camera from the UI indicators used to represent gameplay entities.
 
-Input System
+---
+
+# Input System
 
 The project uses Unity's Input System.
 
 Main asset:
 
+```text
 Assets/InputSystem_Actions.inputactions
+```
 
 The project includes a generated C# wrapper:
 
+```text
 Assets/InputSystem_Actions.cs
+```
 
 Current player actions include movement, camera look, attack, interaction, crouch, jump, previous/next and sprint functionality.
 
 When adding an input:
 
-Add the action to the Input Actions asset.
+1. Add the action to the Input Actions asset.
+2. Add bindings.
+3. Save the Input Actions asset.
+4. Let Unity regenerate the wrapper if required.
+5. Subscribe to the action in the appropriate gameplay system.
 
-Add bindings.
+---
 
-Save the Input Actions asset.
-
-Let Unity regenerate the wrapper if required.
-
-Subscribe to the action in the appropriate gameplay system.
-
-Adding a New Gameplay System
+# Adding a New Gameplay System
 
 When adding a new feature, keep responsibilities separated.
 
 Recommended pattern:
 
+```text
 Data
  ↓
 Runtime System
@@ -743,9 +736,11 @@ Runtime System
 Component
  ↓
 UI / Animation / Physics
+```
 
 For example:
 
+```text
 ItemData
  ↓
 Inventory
@@ -753,9 +748,11 @@ Inventory
 Player
  ↓
 InventoryUI
+```
 
 or:
 
+```text
 RoomDatabase
  ↓
 RoomBuilder
@@ -765,13 +762,17 @@ Generated Room
 NavMesh
  ↓
 Enemy AI
+```
 
-Avoid putting unrelated systems into Player.cs, Enemy.cs, or one giant manager.
+Avoid putting unrelated systems into `Player.cs`, `Enemy.cs`, or one giant manager.
 
-Main Development Scripts
+---
+
+# Main Development Scripts
 
 The major gameplay/editor scripts currently include:
 
+```text
 AutoGenerateAndBake.cs
 Enemy.cs
 EnemyAI.cs
@@ -814,133 +815,116 @@ LevelEditorManager.cs
 LevelEditorSelection.cs
 LevelEditorSelectionEditor.cs
 LevelMapSaver.cs
+```
 
-Technology
+---
 
-Unity 6
+# Technology
 
-C#
+- Unity 6
+- C#
+- Unity Input System
+- CharacterController
+- NavMesh Agent
+- Unity AI Navigation
+- Animator State Machines
+- Animation Events
+- Cinemachine
+- Universal Render Pipeline
+- glTFast
+- Mixamo animations
+- Git
+- GitHub
 
-Unity Input System
+---
 
-CharacterController
-
-NavMesh Agent
-
-Unity AI Navigation
-
-Animator State Machines
-
-Animation Events
-
-Cinemachine
-
-Universal Render Pipeline
-
-glTFast
-
-Mixamo animations
-
-Git
-
-GitHub
-
-Project Structure
+# Project Structure
 
 The project currently contains the main Unity folders:
 
+```text
 Assets/
 Packages/
 ProjectSettings/
+```
 
 The major custom systems are organized under:
 
+```text
 Assets/Scripts/
+```
 
 Editor-only tools are under:
 
+```text
 Assets/Editor/
+```
 
-Documentation
+---
+
+# Documentation
 
 A detailed technical reference for the project is available in:
 
-PROJECT_DOCUMENTATION.md
+**[PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENTATION.md)**
 
 The documentation explains how the systems work and how to extend existing systems with new rooms, databases, interactions, items, quests, UI, enemies, and other features.
 
-Planned / Future Features
+---
+
+# Planned / Future Features
 
 The initial version is complete, but development continues.
 
 Potential future work includes:
 
-Gameplay
+### Gameplay
 
-Stamina system
+- Stamina system
+- Enemy hit reactions
+- Additional boss abilities
+- Ranged combat
+- Magic abilities
+- More skills
+- More enemy types
+- More room types
+- More environmental interactions
 
-Enemy hit reactions
+### RPG
 
-Additional boss abilities
+- Character progression
+- Experience system
+- Expanded loot system
+- More equipment
+- More item categories
+- More quest types
+- Dialogue expansion
 
-Ranged combat
+### UI
 
-Magic abilities
+- More HUD elements
+- Improved boss health UI
+- Skill hotbar improvements
+- Damage indicators
+- Improved inventory/equipment presentation
 
-More skills
+### World
 
-More enemy types
+- More room prefabs
+- More procedural generation rules
+- More map themes
+- More interactable objects
+- Expanded runtime NavMesh workflows
 
-More room types
+---
 
-More environmental interactions
-
-RPG
-
-Character progression
-
-Experience system
-
-Expanded loot system
-
-More equipment
-
-More item categories
-
-More quest types
-
-Dialogue expansion
-
-UI
-
-More HUD elements
-
-Improved boss health UI
-
-Skill hotbar improvements
-
-Damage indicators
-
-Improved inventory/equipment presentation
-
-World
-
-More room prefabs
-
-More procedural generation rules
-
-More map themes
-
-More interactable objects
-
-Expanded runtime NavMesh workflows
-
-Development Workflow
+# Development Workflow
 
 The project uses Git and GitHub for version control.
 
 Recommended workflow:
 
+```text
 Make change
    ↓
 Test in Unity
@@ -954,27 +938,34 @@ Review Git changes
 Commit
    ↓
 Push
+```
 
 Avoid committing Unity-generated cache folders such as:
 
+```text
 Library/
 Temp/
 Logs/
 Obj/
 UserSettings/
+```
 
-These should remain excluded by .gitignore.
+These should remain excluded by `.gitignore`.
 
-Screenshots
+---
+
+# Screenshots
 
 Screenshots will be added as the visual presentation of the initial version is finalized.
 
-Development Status
+---
 
-Initial Version — Complete
+# Development Status
+
+## Initial Version — Complete
 
 Core systems are implemented and connected.
 
-The project is now in the expansion, refinement, balancing, content creation, and debugging stage.
+The project is now in the **expansion, refinement, balancing, content creation, and debugging stage**.
 
 Development is active.
