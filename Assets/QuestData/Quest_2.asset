@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c20ff5bdc24beda43b4142c2eacdd387, type: 3}
+  m_Name: Quest_2
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  questID: Quest_2
+  questName: Quest 2
+  description: 'This is automatically generated quest 2. The marketplace awakened
+    long before sunrise as merchants unfolded colorful awnings, polished brass lanterns,
+    and stacked baskets overflowing with fruit, herbs, and handmade trinkets collected
+    from distant places. Travelers wandered between narrow streets, guided more by
+    curiosity than by maps, stopping to admire carved wooden sculptures, intricate
+    glass ornaments, and clocks that chimed at oddly satisfying intervals. A violinist
+    played beneath an ancient oak tree while children invented elaborate games using
+    nothing more than sticks, stones, and endless imagination. High above, swallows
+    traced graceful circles through the cool morning air before disappearing beyond
+    rooftops where vines climbed steadily toward old chimneys. Every conversation
+    blended into a pleasant murmur that rose and fell like gentle waves, creating
+    a rhythm that somehow matched the slow turning of the town''s centuries-old clock
+    tower. As the afternoon sun warmed the cobblestones, shadows shifted across the
+    streets, revealing tiny details that had gone unnoticed earlier, from faded carvings
+    in doorways to colorful mosaics hidden beneath climbing ivy. When night finally
+    settled over the town, countless lanterns reflected in nearby canals, transforming
+    familiar streets into shimmering pathways that invited anyone with an adventurous
+    spirit to keep walking just a little farther.
+
+'
+  objectives:
+  - objectiveType: 2
+    targetID: 
+    requiredAmount: 1
+    description: talk to a
+  goldReward: 69
+  xpReward: 76
+  itemRewards: []

@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c20ff5bdc24beda43b4142c2eacdd387, type: 3}
+  m_Name: Quest_1
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  questID: Quest_1
+  questName: Quest 1
+  description: 'This is automatically generated quest 1.On a quiet afternoon when
+    the clouds seemed undecided about whether to rain or drift away, an old bicycle
+    leaned against a weathered fence beside a field of wildflowers that stretched
+    farther than anyone cared to measure. A curious crow hopped from post to post,
+    occasionally stopping to inspect shiny pebbles scattered across the dusty path,
+    while a distant train echoed through the hills like a forgotten melody. Nearby,
+    a small stream reflected patches of blue sky between floating leaves, and dragonflies
+    darted over the water with effortless precision. In the village square, people
+    moved at their own pace, exchanging stories about unusual sunsets, mysterious
+    footprints, and recipes that had been passed down through generations. A baker
+    carefully arranged fresh loaves on wooden shelves, their warm aroma drifting
+    through open windows, while a painter experimented with impossible shades of
+    green that existed only in imagination. Far beyond the mountains, ships crossed
+    calm seas carrying spices, books, musical instruments, and peculiar inventions
+    that promised to make ordinary tasks slightly less ordinary. Somewhere in a quiet
+    library, an unfinished journal waited for its next sentence, surrounded by shelves
+    that held countless adventures, scientific discoveries, ancient myths, and forgotten
+    poems. As evening approached, lanterns flickered to life one by one, casting
+    golden reflections across cobblestone streets where children chased paper airplanes
+    and elderly neighbors watched with gentle smiles. Above them, stars slowly emerged,
+    each appearing as though it had patiently waited for its turn to brighten the
+    night. The wind carried the scent of pine forests, fresh rain, and distant campfires,
+    weaving together memories that belonged to no single traveler yet somehow felt
+    familiar to everyone. A lone fox paused at the edge of the trees before disappearing
+    into the shadows, leaving behind only faint footprints that would vanish by morning.
+    Time continued its quiet rhythm without urgency, allowing every ordinary moment
+    to become part of an endless collection of small, interconnected stories where
+    every object, every sound, and every passing breeze seemed to hold a secret waiting
+    to be noticed by someone willing to slow down and look a little closer.
+
+'
+  objectives:
+  - objectiveType: 2
+    targetID: 
+    requiredAmount: 1
+    description: talk to a
+  goldReward: 58
+  xpReward: 83
+  itemRewards: []

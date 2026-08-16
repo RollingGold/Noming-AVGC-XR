@@ -3,6 +3,10 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("MobData")]
+    [SerializeField] private string enemyID;
+
+
     [Header("Boss Phases")]
     [SerializeField] private int[] phaseHealth;
     [SerializeField] private bool carryOverDamageBetweenPhases;
@@ -14,6 +18,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float despawnDelay = 10f;
 
     public float AttackDamage => attackDamage;
+
+    public string EnemyID => enemyID;
 
     public EnemySpawner Spawner => spawner;
 
@@ -138,14 +144,12 @@ public class Enemy : MonoBehaviour
 
         animator.SetTrigger("Die");
 
-        
-
-        Debug.Log("Boss defeated");
-
         if (spawner != null)
         {
             spawner.EnemyDied();
         }
+
+        QuestManager.Instance?.EnemyKilled(enemyID);
 
         Destroy(gameObject, despawnDelay);
     }

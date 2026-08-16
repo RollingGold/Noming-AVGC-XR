@@ -55,6 +55,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c87aff8481e172428c2ade7f79a04d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  enemyID: Goblin
   phaseHealth: 64000000
   carryOverDamageBetweenPhases: 0
   attackDamage: 13

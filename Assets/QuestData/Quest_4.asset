@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c20ff5bdc24beda43b4142c2eacdd387, type: 3}
+  m_Name: Quest_4
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  questID: Quest_4
+  questName: Quest 4
+  description: 'This is automatically generated quest 4. Inside a sprawling workshop
+    filled with gears, sketches, notebooks, and half-finished inventions, creativity
+    seemed to exist as naturally as sunlight streaming through dusty windows. Mechanical
+    birds with polished copper wings rested beside miniature airships, while shelves
+    overflowed with curious devices whose purposes were known only to their creators.
+    An old compass pointed in unpredictable directions, a collection of seashells
+    rested beside astronomical charts, and dozens of tiny bottles contained colorful
+    powders gathered from places few people had ever visited. Every table held a
+    different experiment, from intricate clockwork mechanisms to delicate paper sculptures
+    balanced with astonishing precision. The quiet ticking of hundreds of clocks
+    blended with the scratching of pencils across worn notebooks, forming an oddly
+    comforting soundtrack that encouraged endless curiosity. Even as the day faded
+    into evening, fresh ideas continued to appear, each leading naturally to another
+    question, another sketch, another prototype, and another possibility, reminding
+    everyone inside that imagination rarely follows a straight path and often produces
+    its most remarkable creations when allowed to wander freely.
+
+'
+  objectives:
+  - objectiveType: 2
+    targetID: 
+    requiredAmount: 1
+    description: talk to a
+  goldReward: 171
+  xpReward: 82
+  itemRewards: []

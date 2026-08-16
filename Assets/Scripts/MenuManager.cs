@@ -6,21 +6,28 @@ public class MenuManager : MonoBehaviour
     [Header("Menus")]
     [SerializeField] private GameObject inventoryUI;
     [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject questmenuUI;
 
     [Header("Extra UI")]
     [SerializeField] private GameObject mainUI;
     [SerializeField] private GameObject characterLights;
 
+
+
     private InputSystem_Actions inputActions;
 
     private bool inventoryPressed;
     private bool escapePressed;
+    private bool questPressed;
 
     public bool IsInventoryOpen =>
         inventoryUI.activeSelf;
 
     public bool IsPaused =>
         pauseMenuUI.activeSelf;
+
+    public bool IsQuestMenuOpen =>
+    questmenuUI.activeSelf;
 
     private void Awake()
     {
@@ -32,6 +39,7 @@ public class MenuManager : MonoBehaviour
     {
         inventoryUI.SetActive(false);
         pauseMenuUI.SetActive(false);
+        questmenuUI.SetActive(false);
 
         UpdateVisuals();
     }
@@ -40,13 +48,18 @@ public class MenuManager : MonoBehaviour
     {
         inputActions.Enable();
 
-        inputActions.Player.Inventory
-            .performed +=
-            ctx => inventoryPressed = true;
-
-        inputActions.Player.Escape
-            .performed +=
-            ctx => escapePressed = true;
+        inputActions.Player.Inventory.performed += ctx =>
+        {
+            inventoryPressed = true;
+        };
+        inputActions.Player.Escape.performed += ctx =>
+        {
+            escapePressed = true;
+        };
+        inputActions.Player.Quest.performed += ctx =>
+        {
+            questPressed = true;
+        };
     }
 
     private void OnDisable()
@@ -67,12 +80,20 @@ public class MenuManager : MonoBehaviour
             TogglePause();
             escapePressed = false;
         }
+        if(questPressed)
+        {
+            ToggleQuestMenu();
+            questPressed = false;
+        }
     }
 
     public void ToggleInventory()
     {
         if (IsPaused)
             return;
+
+        if (IsQuestMenuOpen)
+            questmenuUI.SetActive(false);
 
         inventoryUI.SetActive(
             !inventoryUI.activeSelf
@@ -93,8 +114,32 @@ public class MenuManager : MonoBehaviour
             return;
         }
 
+        if (IsQuestMenuOpen)
+        {
+            questmenuUI.SetActive(false);
+
+            UpdateVisuals();
+            UpdateTimeScale();
+            return;
+        }
+
         pauseMenuUI.SetActive(
             !pauseMenuUI.activeSelf
+        );
+
+        UpdateVisuals();
+        UpdateTimeScale();
+    }
+    public void ToggleQuestMenu()
+    {
+        if (IsPaused)
+            return;
+
+        if (IsInventoryOpen)
+            inventoryUI.SetActive(false);
+
+        questmenuUI.SetActive(
+            !questmenuUI.activeSelf
         );
 
         UpdateVisuals();
@@ -111,22 +156,20 @@ public class MenuManager : MonoBehaviour
 
     private void UpdateVisuals()
     {
-        bool inventoryOpen =
-            inventoryUI.activeSelf;
+        bool menuOpen =
+            inventoryUI.activeSelf ||
+            questmenuUI.activeSelf;
 
-        characterLights.SetActive(
-            inventoryOpen
-        );
+        characterLights.SetActive(menuOpen);
 
-        mainUI.SetActive(
-            !inventoryOpen
-        );
+        mainUI.SetActive(!menuOpen);
     }
 
     private void UpdateTimeScale()
     {
         Time.timeScale =
             (inventoryUI.activeSelf ||
+             questmenuUI.activeSelf ||
              pauseMenuUI.activeSelf)
             ? 0f
             : 1f;
