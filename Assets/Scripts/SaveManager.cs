@@ -3,7 +3,7 @@ using System.IO;
 
 public class SaveManager : MonoBehaviour
 {
-    [Header("Sceneloader")]
+    [Header("Scene Loader")]
     [SerializeField] private SceneLoader sceneLoader;
 
     [Header("Inventory")]
@@ -20,37 +20,66 @@ public class SaveManager : MonoBehaviour
 
     private string savePath;
 
+
+    // =========================================================
+    // AWAKE
+    // =========================================================
+
     private void Awake()
     {
-        if (sceneLoader == null)
+        if (Instance != null && Instance != this)
         {
-            sceneLoader = GetComponent<SceneLoader>();
-        }
-        if (inventory == null)
-        {
-            inventory = GetComponent<Inventory>();
-        }
-        if (inventoryUI == null)
-        {
-            inventoryUI = GetComponent<InventoryUI>();
-        }
-        if (equipmentManager == null)
-        {
-            equipmentManager = GetComponent<EquipmentManager>();
-        }
-        if(itemDatabase == null)
-        {
-            itemDatabase = GetComponent<ItemDatabase>();
+            Destroy(gameObject);
+            return;
         }
 
         Instance = this;
 
-        savePath =
-            Application.persistentDataPath +
-            "/save.json";
+        if (sceneLoader == null)
+        {
+            sceneLoader =
+                GetComponent<SceneLoader>();
+        }
 
-        
+        if (inventory == null)
+        {
+            inventory =
+                GetComponent<Inventory>();
+        }
+
+        if (inventoryUI == null)
+        {
+            inventoryUI =
+                GetComponent<InventoryUI>();
+        }
+
+        if (equipmentManager == null)
+        {
+            equipmentManager =
+                GetComponent<EquipmentManager>();
+        }
+
+        if (itemDatabase == null)
+        {
+            itemDatabase =
+                GetComponent<ItemDatabase>();
+        }
+
+        savePath =
+            Path.Combine(
+                Application.persistentDataPath,
+                "save.json");
+
+
+        Debug.Log(
+            "Save Path: " +
+            savePath);
     }
+
+
+    // =========================================================
+    // START
+    // =========================================================
 
     private void Start()
     {
@@ -64,202 +93,451 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+
+    // =========================================================
+    // AUTO SAVE
+    // =========================================================
+
     public void AutoSave()
     {
-
         if (!CanAutoSave)
         {
+            Debug.Log(
+                "AutoSave blocked.");
+
             return;
         }
 
-        Debug.LogWarning(
-        "AUTOSAVE CALLED",
-        this
-        );
-
+        Debug.Log(
+            "AUTOSAVE CALLED",
+            this);
 
         Save();
 
-        Debug.Log("Autosaved");
+        Debug.Log(
+            "Autosaved");
     }
+
+
+    // =========================================================
+    // SAVE
+    // =========================================================
 
     public void Save()
     {
+        if (inventory == null)
+        {
+            Debug.LogError(
+                "Save failed: Inventory is missing.",
+                this);
 
+            return;
+        }
+
+        if (itemDatabase == null)
+        {
+            Debug.LogError(
+                "Save failed: ItemDatabase is missing.",
+                this);
+
+            return;
+        }
 
         SaveData data =
             new SaveData();
 
-        Transform player =
-            GameObject
-            .FindGameObjectWithTag("Player")
-            .transform;
 
-        Debug.Log("Saving Position: " + player.position);
+        // =====================================================
+        // INVENTORY
+        // =====================================================
 
+        data.inventoryItems.Clear();
 
-        data.playerX =
-            player.position.x;
+        Debug.Log(
+            "Saving inventory. Item count: " +
+            inventory.items.Count);
 
-        data.playerY =
-            player.position.y;
-
-        data.playerZ =
-            player.position.z;
 
         foreach (ItemData item in inventory.items)
         {
-            data.inventoryItems.Add(
-                item.itemID
-            );
-        }
-
-        foreach (EquipmentSlot slot in equipmentManager.GetSlots())
-        {
-            ItemData item =
-                slot.GetEquippedItem();
-
             if (item == null)
             {
-                data.equippedItems.Add("");
+                Debug.LogWarning(
+                    "Inventory contains a NULL item.",
+                    this);
+
+                continue;
             }
-            else
+
+
+            if (string.IsNullOrEmpty(item.itemID))
             {
-                data.equippedItems.Add(
-                    item.itemID
-                );
+                Debug.LogError(
+                    "Item has an empty Item ID: " +
+                    item.name,
+                    item);
+
+                continue;
+            }
+
+
+            Debug.Log(
+                "Saving Item: " +
+                item.name +
+                " | ID: " +
+                item.itemID);
+
+
+            data.inventoryItems.Add(
+                item.itemID);
+        }
+
+
+        // =====================================================
+        // EQUIPMENT
+        // =====================================================
+
+        if (equipmentManager != null)
+        {
+            EquipmentSlot[] slots =
+                equipmentManager.GetSlots();
+
+
+            foreach (EquipmentSlot slot in slots)
+            {
+                if (slot == null)
+                {
+                    data.equippedItems.Add("");
+                    continue;
+                }
+
+
+                ItemData item =
+                    slot.GetEquippedItem();
+
+
+                if (item == null)
+                {
+                    data.equippedItems.Add("");
+                }
+                else
+                {
+                    data.equippedItems.Add(
+                        item.itemID);
+                }
             }
         }
+
+
+        // =====================================================
+        // CONVERT TO JSON
+        // =====================================================
 
         string json =
             JsonUtility.ToJson(
                 data,
-                true
-            );
+                true);
 
-        File.WriteAllText(
-            savePath,
-            json
-        );
 
-        Debug.Log("Game Saved");
-        Debug.Log(json);
+        // =====================================================
+        // WRITE FILE
+        // =====================================================
+
+        try
+        {
+            File.WriteAllText(
+                savePath,
+                json);
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogError(
+                "Failed to save game:\n" +
+                exception);
+
+            return;
+        }
+
+
+        Debug.Log(
+            "Game Saved");
+
+        Debug.Log(
+            json);
     }
+
+
+    // =========================================================
+    // LOAD
+    // =========================================================
 
     public void Load()
     {
         if (!File.Exists(savePath))
+        {
+            Debug.Log(
+                "No save file found.");
+
             return;
+        }
+
+
+        if (inventory == null)
+        {
+            Debug.LogError(
+                "Load failed: Inventory is missing.",
+                this);
+
+            return;
+        }
+
+
+        if (itemDatabase == null)
+        {
+            Debug.LogError(
+                "Load failed: ItemDatabase is missing.",
+                this);
+
+            return;
+        }
+
 
         CanAutoSave = false;
 
-        string json =
-            File.ReadAllText(savePath);
 
-        SaveData data =
-            JsonUtility.FromJson<SaveData>(
-                json
-            );
+        string json;
 
-        // Load Position
+        try
+        {
+            json =
+                File.ReadAllText(
+                    savePath);
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogError(
+                "Failed to read save file:\n" +
+                exception);
 
-        Transform player =
-            GameObject
-            .FindGameObjectWithTag("Player")
-            .transform;
+            CanAutoSave = true;
 
-        CharacterController cc = player.GetComponent<CharacterController>();
+            return;
+        }
 
-        if (cc != null)
-            cc.enabled = false;
 
-        player.position =
-            new Vector3(
-                data.playerX,
-                data.playerY,
-                data.playerZ
-            );
+        if (string.IsNullOrEmpty(json))
+        {
+            Debug.LogError(
+                "Save file is empty.");
 
-        if (cc != null)
-            cc.enabled = true;
+            CanAutoSave = true;
 
-        // Clear Inventory
+            return;
+        }
+
+
+        SaveData data;
+
+        try
+        {
+            data =
+                JsonUtility.FromJson<SaveData>(
+                    json);
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogError(
+                "Failed to read save data:\n" +
+                exception);
+
+            CanAutoSave = true;
+
+            return;
+        }
+
+
+        if (data == null)
+        {
+            Debug.LogError(
+                "SaveData is NULL.");
+
+            CanAutoSave = true;
+
+            return;
+        }
+
+
+        // =====================================================
+        // INVENTORY
+        // =====================================================
 
         inventory.items.Clear();
 
-        // Load Inventory
 
-        foreach (
-            string itemID
-            in data.inventoryItems)
+        if (data.inventoryItems != null)
         {
-            ItemData item =
-                itemDatabase.GetItem(
-                    itemID
-                );
+            Debug.Log(
+                "Loading inventory. Saved item count: " +
+                data.inventoryItems.Count);
 
-            if (item != null)
+
+            foreach (
+                string itemID
+                in data.inventoryItems)
             {
-                inventory.items.Add(
-                    item
-                );
+                if (string.IsNullOrEmpty(itemID))
+                {
+                    Debug.LogWarning(
+                        "Found empty Item ID in save.");
+
+                    continue;
+                }
+
+
+                Debug.Log(
+                    "Trying to load Item ID: " +
+                    itemID);
+
+
+                ItemData item =
+                    itemDatabase.GetItem(
+                        itemID);
+
+
+                if (item != null)
+                {
+                    inventory.items.Add(
+                        item);
+
+
+                    Debug.Log(
+                        "Loaded Item: " +
+                        item.name +
+                        " | ID: " +
+                        item.itemID);
+                }
+                else
+                {
+                    Debug.LogError(
+                        "ItemDatabase could not find Item ID: " +
+                        itemID);
+                }
             }
         }
 
-        // Clear Equipment
 
-        EquipmentSlot[] slots =
-            equipmentManager.GetSlots();
+        // =====================================================
+        // EQUIPMENT
+        // =====================================================
 
-        foreach (
-            EquipmentSlot slot
-            in slots)
+        if (equipmentManager != null)
         {
-            slot.Unequip();
-        }
+            EquipmentSlot[] slots =
+                equipmentManager.GetSlots();
 
-        // Load Equipment
 
-        for (
-            int i = 0;
-            i < data.equippedItems.Count &&
-            i < slots.Length;
-            i++)
-        {
-            string itemID =
-                data.equippedItems[i];
+            // Clear equipment
 
-            if (string.IsNullOrEmpty(itemID))
-                continue;
-
-            ItemData item =
-                itemDatabase.GetItem(
-                    itemID
-                );
-
-            if (item != null)
+            foreach (
+                EquipmentSlot slot
+                in slots)
             {
-                slots[i].Equip(item);
+                if (slot != null)
+                {
+                    slot.Unequip();
+                }
+            }
+
+
+            // Load equipment
+
+            if (data.equippedItems != null)
+            {
+                for (
+                    int i = 0;
+                    i < data.equippedItems.Count &&
+                    i < slots.Length;
+                    i++)
+                {
+                    string itemID =
+                        data.equippedItems[i];
+
+
+                    if (string.IsNullOrEmpty(itemID))
+                        continue;
+
+
+                    ItemData item =
+                        itemDatabase.GetItem(
+                            itemID);
+
+
+                    if (item != null)
+                    {
+                        slots[i].Equip(
+                            item);
+
+
+                        Debug.Log(
+                            "Loaded equipped item: " +
+                            item.name);
+                    }
+                    else
+                    {
+                        Debug.LogError(
+                            "Could not find equipped Item ID: " +
+                            itemID);
+                    }
+                }
             }
         }
-
-        inventoryUI.Refresh();
 
         Debug.Log(
-            "Game Loaded"
-        );
+    "Items after loading: " +
+    inventory.items.Count);
+
+        // =====================================================
+        // REFRESH UI
+        // =====================================================
+
+        if (inventoryUI != null)
+        {
+            inventoryUI.Refresh();
+        }
+
+
+        Debug.Log(
+            "Game Loaded");
+
+
+        Debug.Log(
+            "Final inventory count: " +
+            inventory.items.Count);
+
 
         CanAutoSave = true;
     }
 
+
+    // =========================================================
+    // CHECK SAVE
+    // =========================================================
+
     public static bool HasSaveFile()
     {
         string path =
-            Application.persistentDataPath +
-            "/save.json";
+            Path.Combine(
+                Application.persistentDataPath,
+                "save.json");
+
 
         return File.Exists(path);
     }
+
+
+    // =========================================================
+    // DELETE SAVE
+    // =========================================================
 
     public void DeleteSave()
     {
@@ -267,7 +545,13 @@ public class SaveManager : MonoBehaviour
         {
             File.Delete(savePath);
 
-            Debug.Log("Save Deleted");
+            Debug.Log(
+                "Save Deleted");
+        }
+        else
+        {
+            Debug.Log(
+                "No save file to delete.");
         }
     }
 }

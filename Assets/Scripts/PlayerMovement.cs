@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private float gravity = -30f;
     [SerializeField] private float fallMultiplier = 2.5f;
-    [SerializeField]private float fallingCooldown = 1f;
+    [SerializeField] private float fallingCooldown = 1f;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -23,164 +23,289 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
 
     private CharacterController controller;
-
     private InputSystem_Actions inputActions;
 
     private Player player;
-
     private PlayerStateMachine stateMachine;
-
     private PlayerCombat playerCombat;
 
     private Vector2 moveInput;
-
     private Vector3 velocity;
 
-    private float currentSpeedMultiplier = 1;
-
-    private float currentSpeed = 0;
+    private float currentSpeedMultiplier = 1f;
+    private float currentSpeed;
 
     private float fallingCooldownLeft;
 
     private bool jumpPressed;
-
     private bool sprintPressed;
 
-    private bool canMove;
+    public bool isGrounded
+    {
+        get;
+        private set;
+    }
 
-    public bool isGrounded {  get; private set; }
+
+    // =========================================================
+    // AWAKE
+    // =========================================================
 
     private void Awake()
     {
-        player = GetComponent<Player>();
+        player =
+            GetComponent<Player>();
 
-        controller = GetComponent<CharacterController>();
+        controller =
+            GetComponent<CharacterController>();
 
-        stateMachine = GetComponent<PlayerStateMachine>();
+        stateMachine =
+            GetComponent<PlayerStateMachine>();
 
-        inputActions = new InputSystem_Actions();
+        playerCombat =
+            GetComponent<PlayerCombat>();
 
-        playerCombat = GetComponent<PlayerCombat>();
+        inputActions =
+            new InputSystem_Actions();
 
-        fallingCooldownLeft = fallingCooldown;
+        fallingCooldownLeft =
+            fallingCooldown;
     }
+
+
+    // =========================================================
+    // ENABLE
+    // =========================================================
 
     private void OnEnable()
     {
         inputActions.Enable();
 
-        inputActions.Player.Move.performed += ctx =>
-        {
-            moveInput = ctx.ReadValue<Vector2>();
-        };
+        inputActions.Player.Move.performed += OnMove;
+        inputActions.Player.Move.canceled += OnMoveCanceled;
 
-        inputActions.Player.Move.canceled += ctx =>
-        {
-            moveInput = Vector2.zero;
-        };
+        inputActions.Player.Jump.performed += OnJump;
 
-        inputActions.Player.Jump.performed += ctx =>
-        {
-            jumpPressed = true;
-        };
-
-        inputActions.Player.Sprint.performed += ctx =>
-        {
-            sprintPressed = true;
-            currentSpeedMultiplier += sprintSpeedMultiplier;
-        };
-
-        inputActions.Player.Sprint.canceled += ctx =>
-        {
-            sprintPressed = false;
-            currentSpeedMultiplier -= sprintSpeedMultiplier;
-        };
+        inputActions.Player.Sprint.performed += OnSprint;
+        inputActions.Player.Sprint.canceled += OnSprintCanceled;
     }
+
+
+    // =========================================================
+    // DISABLE
+    // =========================================================
 
     private void OnDisable()
     {
+        inputActions.Player.Move.performed -= OnMove;
+        inputActions.Player.Move.canceled -= OnMoveCanceled;
+
+        inputActions.Player.Jump.performed -= OnJump;
+
+        inputActions.Player.Sprint.performed -= OnSprint;
+        inputActions.Player.Sprint.canceled -= OnSprintCanceled;
+
         inputActions.Disable();
     }
+
+
+    // =========================================================
+    // INPUT
+    // =========================================================
+
+    private void OnMove(
+        InputAction.CallbackContext context)
+    {
+        moveInput =
+            context.ReadValue<Vector2>();
+    }
+
+
+    private void OnMoveCanceled(
+        InputAction.CallbackContext context)
+    {
+        moveInput =
+            Vector2.zero;
+    }
+
+
+    private void OnJump(
+        InputAction.CallbackContext context)
+    {
+        jumpPressed = true;
+    }
+
+
+    private void OnSprint(
+        InputAction.CallbackContext context)
+    {
+        sprintPressed = true;
+    }
+
+
+    private void OnSprintCanceled(
+        InputAction.CallbackContext context)
+    {
+        sprintPressed = false;
+    }
+
+
+    // =========================================================
+    // UPDATE
+    // =========================================================
 
     private void Update()
     {
         if (player.IsDead)
             return;
 
-        CheckCanMove();
+
+        if (GameInputManager.InputLocked)
+            return;
+
 
         CheckGround();
 
         CalculateCurrentSpeed();
 
-        HandleMovement();
-
         HandleJump();
 
         HandleGravity();
 
+        HandleMovement();
+
         HandleStateTransitions();
     }
 
+
+    // =========================================================
+    // MOVEMENT
+    // =========================================================
+
     private void HandleMovement()
     {
-
-        if (!canMove)
+        // Do not allow movement while attacking.
+        if (playerCombat != null &&
+            playerCombat.isAttacking)
+        {
             return;
+        }
 
-        Vector3 cameraForward = cameraTransform.forward;
-        Vector3 cameraRight = cameraTransform.right;
 
+        Vector3 cameraForward =
+            cameraTransform.forward;
+
+        Vector3 cameraRight =
+            cameraTransform.right;
+
+
+        // Remove vertical camera rotation.
         cameraForward.y = 0f;
         cameraRight.y = 0f;
 
+
         cameraForward.Normalize();
         cameraRight.Normalize();
+
 
         Vector3 moveDirection =
             cameraForward * moveInput.y +
             cameraRight * moveInput.x;
 
-        if (moveDirection.magnitude > 0.1f)
-        {
-            Quaternion targetRotation =
-                Quaternion.LookRotation(moveDirection);
 
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                rotationSpeed * Time.deltaTime
-            );
+        // Prevent diagonal movement from being faster.
+        if (moveDirection.sqrMagnitude > 1f)
+        {
+            moveDirection.Normalize();
         }
 
-        
+
+        // -----------------------------------------------------
+        // ROTATION
+        // -----------------------------------------------------
+
+        if (moveDirection.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRotation =
+                Quaternion.LookRotation(
+                    moveDirection,
+                    Vector3.up
+                );
+
+
+            transform.rotation =
+                Quaternion.Slerp(
+                    transform.rotation,
+                    targetRotation,
+                    rotationSpeed *
+                    Time.deltaTime
+                );
+        }
+
+
+        // -----------------------------------------------------
+        // HORIZONTAL MOVEMENT
+        // -----------------------------------------------------
+
+        Vector3 horizontalVelocity =
+            moveDirection *
+            currentSpeed;
+
+
+        // -----------------------------------------------------
+        // COMBINE HORIZONTAL + VERTICAL
+        // -----------------------------------------------------
+
+        Vector3 finalMovement =
+            horizontalVelocity;
+
+        finalMovement.y =
+            velocity.y;
+
 
         controller.Move(
-            moveDirection.normalized *
-            currentSpeed *
+            finalMovement *
             Time.deltaTime
         );
     }
 
+
+    // =========================================================
+    // SPEED
+    // =========================================================
+
     private void CalculateCurrentSpeed()
     {
-        currentSpeed = moveSpeed;
+        currentSpeed =
+            moveSpeed;
 
-        currentSpeed = currentSpeed * currentSpeedMultiplier;
 
+        if (sprintPressed &&
+            moveInput.magnitude > 0.1f)
+        {
+            currentSpeed *=
+                sprintSpeedMultiplier;
+        }
     }
+
+
+    // =========================================================
+    // JUMP
+    // =========================================================
 
     private void HandleJump()
     {
-        if(!canMove)
+        if (playerCombat != null &&
+            playerCombat.isAttacking)
+        {
+            jumpPressed = false;
             return;
-
-        if (playerCombat.isAttacking)
-            return;
+        }
 
 
         if (!jumpPressed)
             return;
+
 
         if (!isGrounded)
         {
@@ -188,66 +313,116 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        velocity.y = Mathf.Sqrt(
-            jumpHeight * -2f * gravity
-        );
+
+        velocity.y =
+            Mathf.Sqrt(
+                jumpHeight *
+                -2f *
+                gravity
+            );
+
 
         jumpPressed = false;
     }
 
+
+    // =========================================================
+    // GRAVITY
+    // =========================================================
+
     private void HandleGravity()
     {
-        if (isGrounded && velocity.y < 0f)
+        if (isGrounded &&
+            velocity.y < 0f)
         {
             velocity.y = -2f;
         }
 
+
         if (velocity.y < 0f)
         {
-            velocity.y += gravity *
+            velocity.y +=
+                gravity *
                 fallMultiplier *
                 Time.deltaTime;
         }
         else
         {
-            velocity.y += gravity *
+            velocity.y +=
+                gravity *
                 Time.deltaTime;
         }
-
-        controller.Move(
-            velocity * Time.deltaTime
-        );
     }
+
+
+    // =========================================================
+    // GROUND
+    // =========================================================
 
     public void CheckGround()
     {
-        isGrounded = Physics.CheckSphere(
-            groundCheck.position,
-            groundDistance,
-            groundLayer
-        );
+        if (groundCheck == null)
+        {
+            isGrounded =
+                controller.isGrounded;
+
+            return;
+        }
+
+
+        isGrounded =
+            Physics.CheckSphere(
+                groundCheck.position,
+                groundDistance,
+                groundLayer
+            );
+
+
+        // CharacterController fallback.
+        if (controller.isGrounded)
+        {
+            isGrounded = true;
+        }
     }
+
+
+    // =========================================================
+    // STATE MACHINE
+    // =========================================================
 
     private void HandleStateTransitions()
     {
-        fallingCooldownLeft -= Time.deltaTime;
+        fallingCooldownLeft -=
+            Time.deltaTime;
 
-        if( isGrounded )
+
+        if (isGrounded)
         {
-            fallingCooldownLeft = fallingCooldown;
+            fallingCooldownLeft =
+                fallingCooldown;
         }
 
-        bool isMoving = moveInput.magnitude > 0.1f;
 
-        bool isFalling = velocity.y < -0.1f && !isGrounded;
+        bool isMoving =
+            moveInput.magnitude > 0.1f;
 
-        bool isJumping = velocity.y > 0.1f;
+
+        bool isFalling =
+            velocity.y < -0.1f &&
+            !isGrounded;
+
+
+        bool isJumping =
+            velocity.y > 0.1f;
+
 
         bool isSprinting =
             sprintPressed &&
             isMoving;
 
-        if (isFalling && fallingCooldownLeft <= 0)
+
+        if (isFalling &&
+            fallingCooldownLeft <= 0f)
         {
             stateMachine.ChangeState(
                 PlayerStateMachine.PlayerState.Fall
@@ -255,6 +430,7 @@ public class PlayerMovement : MonoBehaviour
 
             return;
         }
+
 
         if (isJumping)
         {
@@ -265,6 +441,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+
         if (isSprinting)
         {
             stateMachine.ChangeState(
@@ -273,6 +450,7 @@ public class PlayerMovement : MonoBehaviour
 
             return;
         }
+
 
         if (isMoving)
         {
@@ -283,29 +461,26 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+
         stateMachine.ChangeState(
             PlayerStateMachine.PlayerState.Idle
         );
     }
 
-    private void CheckCanMove()
-    {
-        if(playerCombat.isAttacking)
-        {
-            canMove = false;
-        }
-        else
-        {
-            canMove = true;
-        }
-    }
+
+    // =========================================================
+    // DEBUG
+    // =========================================================
 
     private void OnDrawGizmos()
     {
         if (groundCheck == null)
             return;
 
-        Gizmos.color = Color.green;
+
+        Gizmos.color =
+            Color.green;
+
 
         Gizmos.DrawWireSphere(
             groundCheck.position,

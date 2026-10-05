@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class SaveData
 {
     // Position
-    public float playerX;
-    public float playerY;
-    public float playerZ;
+    //public float playerX;
+    //public float playerY;
+    //public float playerZ;
 
     // Inventory
     public List<string> inventoryItems =

@@ -57,7 +57,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   enemyID: Goblin
   phaseHealth: 64000000
-  carryOverDamageBetweenPhases: 0
+  carryOverDamageBetweenPhases: 1
   attackDamage: 13
   despawnDelay: 10
 --- !u!114 &2457479994358452041

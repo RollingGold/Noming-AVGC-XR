@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,27 +24,92 @@ public class EnemySpawner : MonoBehaviour
         CustomPoints
     }
 
+
+    // =========================================================
+    // GENERAL
+    // =========================================================
+
     [Header("General")]
-    [SerializeField] private SpawnMode spawnMode = SpawnMode.SpawnOnce;
-    [SerializeField] private SpawnShape spawnShape = SpawnShape.Circle;
+    [SerializeField]
+    private SpawnMode spawnMode = SpawnMode.SpawnOnce;
+
+    [SerializeField]
+    private SpawnShape spawnShape = SpawnShape.Circle;
+
+
+    // =========================================================
+    // ENEMY
+    // =========================================================
 
     [Header("Enemy")]
-    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField]
+    private GameObject enemyPrefab;
+
+
+    // =========================================================
+    // SPAWN ONCE
+    // =========================================================
 
     [Header("Spawn Once")]
-    [SerializeField] private int spawnCount = 5;
+    [SerializeField]
+    private int spawnCount = 5;
+
+
+    // =========================================================
+    // INFINITE
+    // =========================================================
 
     [Header("Infinite Spawn")]
-    [SerializeField] private int maxAlive = 5;
-    [SerializeField] private float respawnDelay = 5f;
+    [SerializeField]
+    private int maxAlive = 5;
+
+    [SerializeField]
+    private float respawnDelay = 5f;
+
+
+    // =========================================================
+    // SPAWN AREA
+    // =========================================================
 
     [Header("Spawn Area")]
-    [SerializeField] private float spawnRadius = 10f;
+    [SerializeField]
+    private float spawnRadius = 10f;
+
+
+    // =========================================================
+    // CLEANUP
+    // =========================================================
+
+    [Header("Cleanup")]
+    [Tooltip(
+        "Destroy all enemies created by this spawner " +
+        "when the spawner is destroyed.")]
+    [SerializeField]
+    private bool destroySpawnedEnemiesOnDestroy = true;
+
+
+    // =========================================================
+    // DEBUG
+    // =========================================================
 
     [Header("Debug")]
-    [SerializeField] private bool drawGizmos = true;
+    [SerializeField]
+    private bool drawGizmos = true;
+
+
+    // =========================================================
+    // RUNTIME
+    // =========================================================
 
     private int currentAlive;
+
+    private readonly List<GameObject> spawnedEnemies =
+        new List<GameObject>();
+
+
+    // =========================================================
+    // START
+    // =========================================================
 
     private void Start()
     {
@@ -59,7 +125,10 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    #region Spawn Once
+
+    // =========================================================
+    // SPAWN ONCE
+    // =========================================================
 
     private void SpawnOnce()
     {
@@ -69,9 +138,10 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    #endregion
 
-    #region Infinite
+    // =========================================================
+    // INFINITE
+    // =========================================================
 
     private void StartInfiniteSpawner()
     {
@@ -83,16 +153,51 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+
+    public void EnemyDied(GameObject enemy)
+    {
+        if (enemy != null)
+        {
+            spawnedEnemies.Remove(enemy);
+        }
+
+        if (currentAlive > 0)
+        {
+            currentAlive--;
+        }
+
+        if (spawnMode == SpawnMode.Infinite)
+        {
+            StartCoroutine(
+                RespawnRoutine());
+        }
+    }
+
+
+    // Compatibility with your old Enemy script
     public void EnemyDied()
     {
-        currentAlive--;
+        if (currentAlive > 0)
+        {
+            currentAlive--;
+        }
 
-        StartCoroutine(RespawnRoutine());
+        if (spawnMode == SpawnMode.Infinite)
+        {
+            StartCoroutine(
+                RespawnRoutine());
+        }
     }
+
 
     private IEnumerator RespawnRoutine()
     {
-        yield return new WaitForSeconds(respawnDelay);
+        yield return new WaitForSeconds(
+            respawnDelay);
+
+        // Spawner might have been destroyed
+        if (this == null)
+            yield break;
 
         if (currentAlive < maxAlive)
         {
@@ -102,19 +207,33 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    #endregion
 
-    #region Spawn Enemy
+    // =========================================================
+    // SPAWN ENEMY
+    // =========================================================
 
     private void SpawnEnemy()
     {
-        Vector3 spawnPosition = GetSpawnPosition();
+        if (enemyPrefab == null)
+        {
+            Debug.LogWarning(
+                "EnemySpawner has no enemy prefab.",
+                this);
+
+            return;
+        }
+
+        Vector3 spawnPosition =
+            GetSpawnPosition();
 
         GameObject enemy =
             Instantiate(
                 enemyPrefab,
                 spawnPosition,
                 Quaternion.identity);
+
+        // Keep track of the enemy.
+        spawnedEnemies.Add(enemy);
 
         Enemy enemyScript =
             enemy.GetComponent<Enemy>();
@@ -125,38 +244,52 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    #endregion
 
-    #region Spawn Position
+    // =========================================================
+    // SPAWN POSITION
+    // =========================================================
 
     private Vector3 GetSpawnPosition()
     {
         switch (spawnShape)
         {
             case SpawnShape.Point:
+
                 return transform.position;
 
+
             case SpawnShape.Circle:
+
                 return GetRandomCirclePoint();
 
+
             case SpawnShape.Box:
+
                 return GetRandomBoxPoint();
 
+
             default:
+
                 return transform.position;
         }
     }
+
 
     private Vector3 GetRandomCirclePoint()
     {
         for (int i = 0; i < 15; i++)
         {
             Vector2 random =
-                Random.insideUnitCircle * spawnRadius;
+                Random.insideUnitCircle *
+                spawnRadius;
 
             Vector3 point =
                 transform.position +
-                new Vector3(random.x, 0f, random.y);
+                new Vector3(
+                    random.x,
+                    0f,
+                    random.y);
+
 
             if (NavMesh.SamplePosition(
                 point,
@@ -170,6 +303,7 @@ public class EnemySpawner : MonoBehaviour
 
         return transform.position;
     }
+
 
     private Vector3 GetRandomBoxPoint()
     {
@@ -178,9 +312,16 @@ public class EnemySpawner : MonoBehaviour
             Vector3 point =
                 transform.position +
                 new Vector3(
-                    Random.Range(-spawnRadius, spawnRadius),
+                    Random.Range(
+                        -spawnRadius,
+                        spawnRadius),
+
                     0f,
-                    Random.Range(-spawnRadius, spawnRadius));
+
+                    Random.Range(
+                        -spawnRadius,
+                        spawnRadius));
+
 
             if (NavMesh.SamplePosition(
                 point,
@@ -195,39 +336,90 @@ public class EnemySpawner : MonoBehaviour
         return transform.position;
     }
 
-    #endregion
 
-    #region Debug
+    // =========================================================
+    // CLEANUP
+    // =========================================================
+
+    private void OnDestroy()
+    {
+        if (!destroySpawnedEnemiesOnDestroy)
+            return;
+
+        DestroySpawnedEnemies();
+    }
+
+
+    private void DestroySpawnedEnemies()
+    {
+        // Make a copy because the original
+        // list is modified as objects are destroyed.
+        for (int i = spawnedEnemies.Count - 1;
+             i >= 0;
+             i--)
+        {
+            GameObject enemy =
+                spawnedEnemies[i];
+
+            if (enemy != null)
+            {
+                Destroy(enemy);
+            }
+        }
+
+        spawnedEnemies.Clear();
+
+        currentAlive = 0;
+    }
+
+
+    // =========================================================
+    // MANUAL CLEANUP
+    // =========================================================
 
     public void KillAllEnemies()
     {
-        GameObject[] enemies =
-            GameObject.FindGameObjectsWithTag("Enemy");
-
-        foreach (GameObject enemy in enemies)
-        {
-            Destroy(enemy);
-        }
+        DestroySpawnedEnemies();
     }
+
 
     public void KillOneEnemy()
     {
-        GameObject enemy =
-            GameObject.FindGameObjectWithTag("Enemy");
-
-        if (enemy != null)
+        for (int i = 0;
+             i < spawnedEnemies.Count;
+             i++)
         {
-            Destroy(enemy);
+            GameObject enemy =
+                spawnedEnemies[i];
+
+            if (enemy != null)
+            {
+                Destroy(enemy);
+
+                spawnedEnemies.RemoveAt(i);
+
+                if (currentAlive > 0)
+                    currentAlive--;
+
+                return;
+            }
         }
     }
 
 
-    #endregion
+    // =========================================================
+    // RANDOM POINT
+    // =========================================================
 
     public Vector3 GetRandomPointInSpawner()
     {
         return GetSpawnPosition();
     }
+
+
+    // =========================================================
+    // GIZMOS
+    // =========================================================
 
     private void OnDrawGizmosSelected()
     {
@@ -239,21 +431,31 @@ public class EnemySpawner : MonoBehaviour
         switch (spawnShape)
         {
             case SpawnShape.Point:
+
                 Gizmos.DrawSphere(
                     transform.position,
                     0.3f);
+
                 break;
 
+
             case SpawnShape.Circle:
+
                 Gizmos.DrawWireSphere(
                     transform.position,
                     spawnRadius);
+
                 break;
 
+
             case SpawnShape.Box:
+
                 Gizmos.DrawWireCube(
                     transform.position,
-                    Vector3.one * spawnRadius * 2f);
+                    Vector3.one *
+                    spawnRadius *
+                    2f);
+
                 break;
         }
     }

@@ -163,7 +163,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2684091}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 210a929d8e343184eb863ab3f39c2341, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 99b8042c3ac81fe489ca7474daebcf12, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -175,14 +175,16 @@ VideoPlayer:
   m_AspectRatio: 2
   m_DataSource: 0
   m_TimeUpdateMode: 2
-  m_PlaybackSpeed: 1
+  m_PlaybackSpeed: 3
   m_AudioOutputMode: 2
-  m_TargetAudioSources: []
-  m_DirectAudioVolumes: []
+  m_TargetAudioSources:
+  - {fileID: 0}
+  m_DirectAudioVolumes:
+  - 1
   m_Url: 
-  m_EnabledAudioTracks: 
-  m_DirectAudioMutes: 
-  m_ControlledAudioTrackCount: 0
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 01
+  m_ControlledAudioTrackCount: 1
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
   m_Looping: 1
@@ -2122,6 +2124,7 @@ GameObject:
   - component: {fileID: 1275939521}
   - component: {fileID: 1275939523}
   - component: {fileID: 1275939524}
+  - component: {fileID: 1275939525}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -2183,6 +2186,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveManager
   sceneLoader: {fileID: 0}
+  inventory: {fileID: 0}
+  inventoryUI: {fileID: 0}
+  equipmentManager: {fileID: 0}
+  itemDatabase: {fileID: 0}
+--- !u!114 &1275939525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275939520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 964e99d52876704468f3f20576a63c26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameInputManager
 --- !u!1 &1547370982
 GameObject:
   m_ObjectHideFlags: 0

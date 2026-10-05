@@ -23,20 +23,14 @@ public class AutoGenerateAndBake : MonoBehaviour
 
     [Header("Startup")]
 
-    [Tooltip(
-        "Automatically generate the level when the scene starts.")]
     [SerializeField]
     private bool generateOnStart = true;
 
-    [Tooltip(
-        "Bake the NavMesh after Auto Build finishes.")]
     [SerializeField]
     private bool bakeAfterGeneration = true;
 
-    [Tooltip(
-        "Wait this many frames after generation before baking.")]
-    [Min(0)]
     [SerializeField]
+    [Min(0)]
     private int framesBeforeBake = 1;
 
 
@@ -45,8 +39,27 @@ public class AutoGenerateAndBake : MonoBehaviour
     // =========================================================
 
     private bool started;
-
     private bool baking;
+    private bool generationFinished;
+    private bool generationStarted;
+
+    private float progress;
+
+    public bool IsGenerating =>
+        generationStarted && !generationFinished;
+
+    public bool IsGenerationFinished =>
+        generationFinished;
+
+    public bool IsBaking =>
+        baking;
+
+    public bool IsFinished =>
+        generationFinished &&
+        !baking;
+
+    public float Progress =>
+        progress;
 
 
     // =========================================================
@@ -56,7 +69,11 @@ public class AutoGenerateAndBake : MonoBehaviour
     private void Start()
     {
         if (!generateOnStart)
+        {
+            generationFinished = true;
+            progress = 100f;
             return;
+        }
 
         StartCoroutine(
             GenerateAndBakeRoutine());
@@ -73,6 +90,11 @@ public class AutoGenerateAndBake : MonoBehaviour
             yield break;
 
         started = true;
+
+        progress = 0f;
+        generationStarted = false;
+        generationFinished = false;
+
 
         // -----------------------------------------------------
         // CHECK LEVEL EDITOR
@@ -103,7 +125,7 @@ public class AutoGenerateAndBake : MonoBehaviour
 
 
         // -----------------------------------------------------
-        // START AUTO BUILD
+        // START GENERATION
         // -----------------------------------------------------
 
         Debug.Log(
@@ -116,28 +138,68 @@ public class AutoGenerateAndBake : MonoBehaviour
             "====================================");
 
 
+        generationStarted = true;
+
+        progress = 5f;
+
+
         levelEditor.AutoBuild();
 
 
         // -----------------------------------------------------
-        // WAIT FOR AUTO BUILD TO ACTUALLY START
+        // WAIT ONE FRAME
         // -----------------------------------------------------
 
         yield return null;
 
 
         // -----------------------------------------------------
-        // WAIT UNTIL AUTO BUILD FINISHES
+        // GENERATION
         // -----------------------------------------------------
+
+        progress = 10f;
+
 
         while (levelEditor.IsAutoBuildRunning)
         {
+            /*
+             * We cannot know the exact AutoBuild percentage
+             * unless AutoBuild exposes its own progress.
+             *
+             * Slowly move toward 80% while it is running.
+             */
+
+            progress =
+                Mathf.MoveTowards(
+                    progress,
+                    80f,
+                    Time.deltaTime * 5f);
+
             yield return null;
         }
 
 
         // -----------------------------------------------------
-        // LET DESTROYED / CREATED OBJECTS SETTLE
+        // GENERATION COMPLETE
+        // -----------------------------------------------------
+
+        progress = 80f;
+
+        generationFinished = true;
+
+
+        Debug.Log(
+            "====================================");
+
+        Debug.Log(
+            "LEVEL GENERATION COMPLETE");
+
+        Debug.Log(
+            "====================================");
+
+
+        // -----------------------------------------------------
+        // SETTLE
         // -----------------------------------------------------
 
         for (
@@ -149,26 +211,81 @@ public class AutoGenerateAndBake : MonoBehaviour
         }
 
 
-        // -----------------------------------------------------
-        // PHYSICS / TRANSFORM UPDATE
-        // -----------------------------------------------------
-
         Physics.SyncTransforms();
 
 
         // -----------------------------------------------------
-        // BAKE NAVMESH
+        // BAKE
         // -----------------------------------------------------
 
         if (bakeAfterGeneration)
         {
-            BakeNavMesh();
+            yield return StartCoroutine(
+                BakeNavMeshRoutine());
+        }
+        else
+        {
+            progress = 100f;
         }
     }
 
 
     // =========================================================
-    // BAKE
+    // BAKE ROUTINE
+    // =========================================================
+
+    private IEnumerator BakeNavMeshRoutine()
+    {
+        baking = true;
+
+        progress = 85f;
+
+
+        Debug.Log(
+            "====================================");
+
+        Debug.Log(
+            "BAKING NAVMESH");
+
+        Debug.Log(
+            "====================================");
+
+
+        Physics.SyncTransforms();
+
+
+        // BuildNavMesh is synchronous.
+        // So we display a progress stage before
+        // and after it rather than pretending we know
+        // its internal percentage.
+
+        progress = 90f;
+
+        yield return null;
+
+
+        navMeshSurface.BuildNavMesh();
+
+
+        progress = 100f;
+
+
+        baking = false;
+
+
+        Debug.Log(
+            "====================================");
+
+        Debug.Log(
+            "NAVMESH BAKE COMPLETE");
+
+        Debug.Log(
+            "====================================");
+    }
+
+
+    // =========================================================
+    // MANUAL BAKE
     // =========================================================
 
     public void BakeNavMesh()
@@ -190,60 +307,17 @@ public class AutoGenerateAndBake : MonoBehaviour
             return;
         }
 
-        baking = true;
-
-        Debug.Log(
-            "====================================");
-
-        Debug.Log(
-            "BAKING NAVMESH");
-
-        Debug.Log(
-            "====================================");
-
-
-        // -----------------------------------------------------
-        // Make sure generated transforms are updated.
-        // -----------------------------------------------------
-
-        Physics.SyncTransforms();
-
-
-        // -----------------------------------------------------
-        // Build NavMesh from generated rooms.
-        // -----------------------------------------------------
-
-        navMeshSurface.BuildNavMesh();
-
-
-        baking = false;
-
-
-        Debug.Log(
-            "====================================");
-
-        Debug.Log(
-            "NAVMESH BAKE COMPLETE");
-
-        Debug.Log(
-            "====================================");
+        StartCoroutine(
+            BakeNavMeshRoutine());
     }
 
 
     // =========================================================
-    // MANUAL REBUILD NAVMESH
+    // MANUAL REBUILD
     // =========================================================
 
     public void RebuildNavMesh()
     {
         BakeNavMesh();
     }
-
-
-    // =========================================================
-    // PUBLIC STATE
-    // =========================================================
-
-    public bool IsBaking =>
-        baking;
 }

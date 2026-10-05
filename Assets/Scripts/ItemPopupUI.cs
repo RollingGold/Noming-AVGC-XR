@@ -25,7 +25,7 @@ public class ItemPopupUI : MonoBehaviour
         Instance = this;
 
 
-        Debug.Log(equipmentManager);
+       
 
         gameObject.SetActive(false);
     }

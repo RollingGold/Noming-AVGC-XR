@@ -45,6 +45,15 @@ public class RoomConnector : MonoBehaviour
         set => connectedRoom = value;
     }
 
+    private void Start()
+    {
+            if (FindObjectOfType<Player>() != null)
+            {
+                gameObject.SetActive(false);
+            }
+    }
+
+
     private void Update()
     {
         UpdateVisibility();

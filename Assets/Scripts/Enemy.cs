@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
 
     private int currentPhase;
 
-    private int currentHealth;
+    private float currentHealth;
 
     private Animator animator;
 
@@ -64,7 +64,7 @@ public class Enemy : MonoBehaviour
         currentHealth = phaseHealth[currentPhase];
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (IsDead)
             return;
@@ -84,7 +84,7 @@ public class Enemy : MonoBehaviour
 
     private void NextPhase()
     {
-        int remainingDamage =
+        float remainingDamage =
             Mathf.Abs(currentHealth);
 
         currentPhase++;
@@ -162,7 +162,7 @@ public class Enemy : MonoBehaviour
         Die();
     }
 
-    public int GetCurrentHealth()
+    public float GetCurrentHealth()
     {
         return currentHealth;
     }

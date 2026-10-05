@@ -4,7 +4,6 @@ using UnityEngine.AI;
 public class EnemyCombat : MonoBehaviour
 {
     [Header("Attack")]
-    [SerializeField] private int damage = 10;
     [SerializeField] private float attackCooldown = 2f;
     [SerializeField] private float attackRange = 3;
 

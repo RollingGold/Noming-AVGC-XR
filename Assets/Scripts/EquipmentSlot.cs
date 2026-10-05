@@ -8,6 +8,15 @@ public class EquipmentSlot : MonoBehaviour
 
     private ItemData equippedItem;
 
+    private void Start()
+    {
+        if( equippedItem == null)
+        {
+            itemIcon.sprite = null;
+            itemIcon.enabled = false;
+        }
+    }
+
     public bool CanEquip(
         ItemData item)
     {
