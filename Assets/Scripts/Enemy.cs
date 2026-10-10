@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +17,8 @@ public class Enemy : MonoBehaviour
 
     [Header("Death")]
     [SerializeField] private float despawnDelay = 10f;
+    [SerializeField] private CapsuleCollider capsuleCollider;
+
 
     public float AttackDamage => attackDamage;
 
@@ -141,6 +144,8 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         IsDead = true;
+
+        capsuleCollider.enabled = false;
 
         animator.SetTrigger("Die");
 

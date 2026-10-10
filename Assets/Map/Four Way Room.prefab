@@ -113,12 +113,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   spawnMode: 0
-  spawnShape: 2
+  spawnShape: 1
   enemyPrefab: {fileID: 4327064663592665606, guid: f1b9ffb494a7eab40ba3cc0e60f7f457, type: 3}
   spawnCount: 7
   maxAlive: 5
   respawnDelay: 5
-  spawnRadius: 7.6
+  spawnRadius: 5
   destroySpawnedEnemiesOnDestroy: 1
   drawGizmos: 1
 --- !u!1 &9138773014020481509
@@ -131,6 +131,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6796997251538130947}
   - component: {fileID: 4805246705141857353}
+  - component: {fileID: 126260898519938537}
+  - component: {fileID: 5092055072759521680}
   m_Layer: 30
   m_Name: Structure
   m_TagString: Untagged
@@ -175,6 +177,55 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 20, y: 5, z: 20}
   m_Center: {x: 19, y: 2.5, z: 0}
+--- !u!114 &126260898519938537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9138773014020481509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 2
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 1
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: d8c8fe9cb3a981041b92cc4e3a00d07a, type: 2}
+  m_BuildHeightMesh: 0
+--- !u!114 &5092055072759521680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9138773014020481509}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639b22e6f0435d94f83185258a3cedb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AutoGenerateAndBake
+  levelEditor: {fileID: 0}
+  navMeshSurface: {fileID: 126260898519938537}
+  generateOnStart: 0
+  bakeAfterGeneration: 1
+  framesBeforeBake: 0
 --- !u!1001 &1685413820110346913
 PrefabInstance:
   m_ObjectHideFlags: 0

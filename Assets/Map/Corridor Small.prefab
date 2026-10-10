@@ -72,6 +72,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3151950948678129015}
   - component: {fileID: 6176324953268582302}
+  - component: {fileID: 849369741240582231}
+  - component: {fileID: 8814935364338511612}
   m_Layer: 30
   m_Name: Structure
   m_TagString: Untagged
@@ -116,6 +118,55 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4, y: 5, z: 4}
   m_Center: {x: 6, y: 2.5, z: 0}
+--- !u!114 &849369741240582231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6263734135101666652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 2
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 1
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 56e3e80e763f6f04f83b15b202481ab3, type: 2}
+  m_BuildHeightMesh: 0
+--- !u!114 &8814935364338511612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6263734135101666652}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639b22e6f0435d94f83185258a3cedb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AutoGenerateAndBake
+  levelEditor: {fileID: 0}
+  navMeshSurface: {fileID: 849369741240582231}
+  generateOnStart: 0
+  bakeAfterGeneration: 1
+  framesBeforeBake: 0
 --- !u!1001 &1061194916813258374
 PrefabInstance:
   m_ObjectHideFlags: 0

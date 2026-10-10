@@ -295,6 +295,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleJump()
     {
+
         if (playerCombat != null &&
             playerCombat.isAttacking)
         {
@@ -304,7 +305,10 @@ public class PlayerMovement : MonoBehaviour
 
 
         if (!jumpPressed)
+        {
+            jumpPressed = false;
             return;
+        }
 
 
         if (!isGrounded)
@@ -321,8 +325,8 @@ public class PlayerMovement : MonoBehaviour
                 gravity
             );
 
-
         jumpPressed = false;
+        
     }
 
 

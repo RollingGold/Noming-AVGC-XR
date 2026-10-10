@@ -9,7 +9,7 @@ public class MainMenuUIManager : MonoBehaviour
 
   
     
-    private void Start()
+    private void Update()
     {
         continueButton.interactable = SaveManager.HasSaveFile();
 

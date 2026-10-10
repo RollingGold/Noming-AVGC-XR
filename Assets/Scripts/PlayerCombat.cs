@@ -158,18 +158,30 @@ public class PlayerCombat : MonoBehaviour
     private void HandleAttack()
     {
         if (!attackPressed)
+        {
+            attackPressed = false;
             return;
+        }
 
         if (isAttacking)
+        {
+            attackPressed = false;
             return;
+        }
 
         if (attackCooldownLeft > 0f)
+        {
+            attackPressed = false;
             return;
+        }
 
         if (!playerMovement.isGrounded)
+        {
+            attackPressed = false;
             return;
+        }
 
-        attackPressed = false;
+       
 
         StartAttack("Attack");
 
@@ -184,16 +196,28 @@ public class PlayerCombat : MonoBehaviour
     private void HandleSkill1()
     {
         if (!skill1Pressed)
+        {
+            skill1Pressed = false;
             return;
+        }
 
         if (isAttacking)
+        {
+            skill1Pressed = false;
             return;
+        }
 
         if (skill1CooldownLeft > 0f)
+        {
+            skill1Pressed = false;
             return;
+        }
 
         if (!playerMovement.isGrounded)
+        {
+            skill1Pressed = false;
             return;
+        }
 
         skill1Pressed = false;
 
@@ -210,16 +234,28 @@ public class PlayerCombat : MonoBehaviour
     private void HandleSkill2()
     {
         if (!skill2Pressed)
+        {
+            skill2Pressed = false;
             return;
+        }
 
         if (isAttacking)
+        {
+            skill2Pressed = false;
             return;
+        }
 
         if (skill2CooldownLeft > 0f)
+        {
+            skill2Pressed = false;
             return;
+        }
 
         if (!playerMovement.isGrounded)
+        {
+            skill2Pressed = false;
             return;
+        }
 
         skill2Pressed = false;
 
@@ -236,16 +272,28 @@ public class PlayerCombat : MonoBehaviour
     private void HandleSkill3()
     {
         if (!skill3Pressed)
+        {
+            skill3Pressed = false;
             return;
+        }
 
         if (isAttacking)
+        {
+            skill3Pressed = false;
             return;
+        }
 
         if (skill3CooldownLeft > 0f)
+        {
+            skill3Pressed = false;
             return;
+        }
 
         if (!playerMovement.isGrounded)
+        {
+            skill3Pressed = false;
             return;
+        }
 
         skill3Pressed = false;
 

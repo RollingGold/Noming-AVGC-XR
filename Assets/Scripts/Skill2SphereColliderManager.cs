@@ -149,9 +149,9 @@ public class Skill2SphereColliderManager : MonoBehaviour
         if (enemy == null)
             return;
 
-
-        if (hitEnemies.Contains(enemy))
-            return;
+        // not working as intended
+        //if (hitEnemies.Contains(enemy))
+        //    return;
 
 
         if (player == null)

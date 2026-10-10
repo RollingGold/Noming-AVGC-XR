@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackColliderManager : MonoBehaviour
+public class Skill3ColliderManager : MonoBehaviour
 {
     private Player player;
+
     private PlayerCombat playerCombat;
 
     private HashSet<Enemy> hitEnemies =
@@ -13,10 +14,10 @@ public class AttackColliderManager : MonoBehaviour
     private void Awake()
     {
         player =
-            GetComponentInParent<Player>();
+            GameObject.FindGameObjectWithTag("Player").GetComponentInParent<Player>();
 
         playerCombat =
-            GetComponentInParent<PlayerCombat>();
+             GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerCombat>();
 
         ResetHitEnemies();
     }
@@ -56,6 +57,7 @@ public class AttackColliderManager : MonoBehaviour
         //    return;
         // not working as intended
 
+
         if (player == null)
         {
             Debug.LogError(
@@ -82,7 +84,7 @@ public class AttackColliderManager : MonoBehaviour
         // Calculate final damage.
         float damage =
             player.AttackDamage *
-            (playerCombat.AttackPower / 100f);
+            (playerCombat.Skill3Power / 100f);
 
 
         Debug.Log(

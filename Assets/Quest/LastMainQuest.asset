@@ -19,7 +19,7 @@ MonoBehaviour:
   - objectiveType: 0
     targetID: GoblinKing
     requiredAmount: 1
-    description: Kill the Goblin
+    description: Kill the Goblin King
   goldReward: 0
   xpReward: 0
   itemRewards: []

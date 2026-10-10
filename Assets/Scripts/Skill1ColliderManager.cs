@@ -53,8 +53,9 @@ public class Skill1ColliderManager : MonoBehaviour
 
         // Prevent multiple hits from the
         // same attack.
-        if (hitEnemies.Contains(enemy))
-            return;
+        //if (hitEnemies.Contains(enemy))
+        //    return;
+        // not working as intended
 
 
         if (player == null)

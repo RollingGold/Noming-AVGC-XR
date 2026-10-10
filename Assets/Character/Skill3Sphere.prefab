@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3116810980886281078}
   - component: {fileID: 7385127033536848418}
   - component: {fileID: 1000605474924662625}
-  - component: {fileID: 6019682982444043601}
+  - component: {fileID: -496231742015763850}
   m_Layer: 31
   m_Name: Skill3Sphere
   m_TagString: Untagged
@@ -113,7 +113,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6019682982444043601
+--- !u!114 &-496231742015763850
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,10 +122,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5845123412049489851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7848924f033649f4683d5c8d3effdb03, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ef147c4446c8b74db91666d65199590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  fallSpeed: 0
-  groundOffset: 0
-  destroyOnGround: 0
-  destroyDelay: 0

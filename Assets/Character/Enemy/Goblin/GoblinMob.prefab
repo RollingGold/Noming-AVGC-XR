@@ -60,6 +60,7 @@ MonoBehaviour:
   carryOverDamageBetweenPhases: 1
   attackDamage: 13
   despawnDelay: 10
+  capsuleCollider: {fileID: 4932188756933487331}
 --- !u!114 &2457479994358452041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,7 +73,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cbc6ed9157c2ac4b8be1dd6a7d5d1ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  damage: 10
   attackCooldown: 2
   attackRange: 3
   normalAttackCollider: {fileID: 5874104950679228398}
